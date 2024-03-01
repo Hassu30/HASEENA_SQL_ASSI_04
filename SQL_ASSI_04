@@ -1,0 +1,58 @@
+-->SQL Assignment 4
+
+
+CREATE TABLE Students (ID INT PRIMARY KEY,Name VARCHAR(125),Age INT,GPA DECIMAL(3, 2));
+
+INSERT INTO Students (ID, Name, Age, GPA)VALUES
+(1, 'N.HASEENA', 22, 4.21),
+(2, 'K.SAI', 20, 4.50),
+(3, 'P.KAIVALYA', 25, 3.25),
+(4, 'A.SRAVANI', 21, 3.67),
+(5, 'C.HARINI', 26, 3.42);
+
+Select * from Students;
+
+-- Students with GPA greater than 3.5
+SELECT * FROM Students WHERE GPA > 3.5;
+
+-- Students who are under 20 years old
+SELECT Name, Age FROM Students WHERE Age < 20;
+
+-- Retrive top 3 students with highest GPA
+SELECT TOP 3 * FROM Students ORDER BY GPA DESC;
+
+-- Students ordered by Age in ascending order
+SELECT Name, Age FROM Students ORDER BY Age ASC;
+
+
+-- Create the Courses table
+CREATE TABLE courses (CourseID INT PRIMARY KEY,CourseName VARCHAR(255),StudentID INT,FOREIGN KEY (StudentID) REFERENCES Students(ID));
+
+-- Insert records into the Courses table, establishing relationships
+INSERT INTO courses (CourseID, CourseName, StudentID)VALUES
+(101, 'Data Science', 1),
+(102, 'Artifical Intelligence', 2),
+(103, 'CyberSecurity', 3),
+(104, 'Aeronautics', 4),
+(105, 'Cloud Computing', 5);
+
+Select * from courses;
+
+-- Inner join to get student names and their courses
+SELECT Students.Name AS StudentName, courses.CourseName FROM Students INNER JOIN courses ON Students.ID = courses.StudentID;
+
+-- Left join to get student names and their courses, handling cases where students are not enrolled in any courses
+SELECT Students.Name AS StudentName, COALESCE(courses.CourseName, 'NotEnrolled') AS CourseEnrolled FROM Students LEFT JOIN courses ON Students.ID =courses.StudentID;
+
+-- Group by Age to get the count of students in each age group
+SELECT Age, COUNT(*) AS NumberOfStudents FROM Students GROUP BY Age ORDER BY Age;
+
+-- Group by StudentID and Name to get the count of courses each student is enrolled in
+SELECT Students.ID AS StudentID, Students.Name AS StudentName,
+COALESCE(COUNT(courses.CourseID), 0) AS NumberOfCourses FROM Students LEFT JOIN courses ON Students.ID = courses.StudentID GROUP BY Students.ID, Students.Name ORDER BY Students.ID;
+
+-- Calculate the average GPA of all students
+SELECT AVG(GPA) FROM Students as average;
+
+-- Find the maximum age of students
+SELECT MAX(Age) FROM Students as average;
